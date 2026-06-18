@@ -1,0 +1,28 @@
+# Generated data — never commit real data
+data/parquet/
+data/*.duckdb
+*.duckdb
+
+# Logs
+logs/
+
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+renv/staging/
+
+# OS
+.DS_Store
+Thumbs.db

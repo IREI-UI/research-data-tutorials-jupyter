@@ -1,0 +1,22 @@
+[project]
+name = "research-data-tutorials"
+version = "0.1.0"
+description = "Notebooks for working with research data using DuckDB and Parquet"
+requires-python = ">=3.10"
+
+dependencies = [
+    "duckdb>=1.0",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "jupyterlab>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ipykernel",
+]

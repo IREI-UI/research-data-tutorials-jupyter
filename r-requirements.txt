@@ -1,0 +1,20 @@
+# R package dependencies for research-data-tutorials
+#
+# To install all dependencies, run from an R console:
+#
+#   install.packages(c("renv", "IRkernel", "duckdb", "dplyr",
+#                      "arrow", "readr", "DBI"))
+#   IRkernel::installspec()
+#
+# If renv is in use:
+#   renv::restore()
+#
+# Tested with R 4.3+
+
+Packages:
+  - IRkernel    # R kernel for JupyterLab
+  - duckdb      # DuckDB R interface
+  - DBI         # standard R database interface
+  - dplyr       # data manipulation, lazy evaluation against DuckDB
+  - arrow       # Parquet read/write
+  - readr       # fast CSV reading
