@@ -16,7 +16,8 @@ dev = [
     "ipykernel",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "ipykernel",
+    "nbstripout>=0.9.1",
 ]

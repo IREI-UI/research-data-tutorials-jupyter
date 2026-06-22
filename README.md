@@ -67,6 +67,24 @@ renv::restore()
 
 Then launch JupyterLab as above and select the R kernel when opening an R notebook.
 
+**macOS gotcha — IRkernel can't find Jupyter**
+
+If `IRkernel::installspec()` fails because it can't find `jupyter` (the install
+tries to run `jupyter kernelspec --version` internally), it means Jupyter is
+installed inside the project's `uv` virtual environment but is not on the PATH
+that R sees.
+
+Fix: launch R from the terminal with the `.venv/bin` directory prepended to PATH:
+
+```bash
+PATH=$PATH:./.venv/bin R
+```
+
+Then run `IRkernel::installspec()` again from that R session. This is a one-time
+step — once the kernel is registered it will be available in JupyterLab regardless.
+
+#
+
 ### First run
 
 Both notebooks include a setup cell that converts the source CSVs to Parquet
@@ -74,6 +92,27 @@ and initialises the DuckDB file. Run this cell once — subsequent cells read
 from Parquet/DuckDB directly.
 
 ---
+
+## Notebook outputs and Git
+
+Jupyter saves output cells (DataFrames, printed results, etc.) into the
+`.ipynb` file. This is convenient locally but creates noisy Git diffs and
+risks accidentally committing data snippets if notebooks are ever run against
+real data.
+
+The recommended fix is `nbstripout`, which strips outputs automatically at
+`git commit` time via a Git hook:
+
+```bash
+uv add --dev nbstripout
+nbstripout --install   # run once per clone — installs the Git hook
+```
+
+After this, outputs are cleared on every commit. You still see them while
+working locally; they just don't go into Git.
+
+---
+
 
 ## Data sovereignty note
 
