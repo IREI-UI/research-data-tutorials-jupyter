@@ -3,7 +3,7 @@
 # Installs Python and R dependencies for the Research Data Tutorials.
 # Called by postCreateCommand in devcontainer.json.
 
-set -e   # exit on any error
+set -e
 
 echo "=== Installing Python packages ==="
 pip install --quiet \
@@ -19,21 +19,37 @@ pip install --quiet \
 
 echo "=== Installing R ==="
 sudo apt-get update -qq
-sudo apt-get install -y -qq r-base r-base-dev
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+    r-base \
+    r-base-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev
 
 echo "=== Installing R packages ==="
-# Install to user library so no sudo needed at runtime
-R --quiet -e "
+sudo R --quiet -e "
 options(repos = c(CRAN = 'https://cloud.r-project.org'))
-install.packages(c('IRkernel', 'duckdb', 'dplyr', 'arrow', 'readr', 'DBI'))
-IRkernel::installspec()
-cat('R setup complete.\n')
+pkgs <- c('IRkernel', 'duckdb', 'dplyr', 'arrow', 'readr', 'DBI')
+install.packages(pkgs, dependencies = TRUE)
+missing <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
+if (length(missing) > 0) stop(paste('Failed to install:', paste(missing, collapse=', ')))
+cat('All R packages installed OK.\n')
 "
 
+echo "=== Registering R kernel with Jupyter ==="
+R --quiet -e "IRkernel::installspec(user = TRUE)"
+
 echo "=== Setting up nbstripout ==="
-nbstripout --install
+nbstripout --install || true   # non-fatal if not in a git repo
+
+echo "=== Verifying kernels ==="
+jupyter kernelspec list
 
 echo "=== Setup complete ==="
-echo "Python packages: duckdb, pandas, pyarrow, jupyterlab, altair, plotly, seaborn, matplotlib"
-echo "R packages: IRkernel, duckdb, dplyr, arrow, readr, DBI"
-echo "JupyterLab will start automatically — look for the forwarded port 8888."
