@@ -1,0 +1,47 @@
+{
+  // Research Data Tutorials — GitHub Codespaces configuration
+  // Provides a JupyterLab environment with Python and R support.
+  //
+  // On first launch: ~2-3 minutes to build (R packages are the slow part).
+  // Subsequent launches: ~30 seconds (image is cached).
+  //
+  // Packages installed:
+  //   Python: duckdb, pandas, pyarrow, jupyterlab, altair, plotly,
+  //           seaborn, matplotlib, nbstripout
+  //   R:      IRkernel, duckdb, dplyr, arrow, readr, DBI
+
+  "name": "Research Data Tutorials",
+
+  // Python 3.13 base image (Debian-based, includes pip and common tools)
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+
+  // Install all dependencies after container is created
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+
+  // Forward JupyterLab port and open in browser automatically
+  "forwardPorts": [8888],
+  "portsAttributes": {
+    "8888": {
+      "label": "JupyterLab",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  // VS Code extensions — useful if researcher opens in VS Code desktop
+  // rather than the browser editor
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.vscode-jupyter-slideshow"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      }
+    }
+  },
+
+  // Start JupyterLab automatically when the codespace is ready
+  "postStartCommand": "jupyter lab --no-browser --port=8888 --ip=0.0.0.0 &"
+}
